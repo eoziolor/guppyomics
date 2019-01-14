@@ -1,0 +1,80 @@
+Guppy Omics
+===
+
+###### tags: `research`
+
+Jan 10, 2019
+===
+
+Downloading the data from Novogene.
+
+```{bash}
+srun -t 24:00:00 -n 8 --mem 60000 --pty /bin/bash
+mkdir guppy
+cd guppy
+mkdir raw
+cd raw
+wget -r --user="P202SC18122141-01_20181210_AegNaW" --password="lGlLQf" ftp://hwftp.novogene.com/
+```
+
+Downloading genome for _Poecilia reticulata_ from NCBI.
+
+```{bash}
+cd ~/guppy/data
+mkdir genome
+cd genome
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/633/615/GCF_000633615.1_Guppy_female_1.0_MT/GCF_000633615.1_Guppy_female_1.0_MT_genomic.fna.gz
+```
+
+Downloading the annotation of that genome.
+
+```{bash}
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/633/615/GCF_000633615.1_Guppy_female_1.0_MT/GCF_000633615.1_Guppy_female_1.0_MT_genomic.gff.gz
+```
+
+Renaming for ease.
+
+```{bash}
+mv GCF_000633615.1_Guppy_female_1.0_MT_genomic.fna.gz preticulata.fna.gz
+mv GCF_000633615.1_Guppy_female_1.0_MT_genomic.gff.gz preticulata.gff.gz
+```
+
+Indexing genomes
+```{bash}
+zcat preticulata.fna.gz > preticulata.fna
+bwa index preticulata.fna
+samtools faidx preticulata.fna
+```
+
+# Jan 13, 2019
+
+## Initial data
+
+* Downloaded all data from Novogene with code from Jan 10, 2019.
+
+* Now time to figure out how to rename based on the sheet that Novogene provided
+	* Downloading list to farm
+
+```{bash}
+scp -P 2022 ~/Documents/UCD/Projects/guppy_omics/samples_seq/sample_name_list.txt farm:/home/eoziolor/guppy/data/list/
+```
+* Checking md5sum as provided by Novogene
+
+```{bash}
+#!/bin/bash
+my_dir=/home/eoziolor/guppy/data/raw/hwftp.novogene.com/C202SC18122141/raw_data
+cd $my_dir
+touch check_md5
+
+for folder in $(ls)
+do cd $folder
+cat MD5.txt | md5sum -c - >> ../check_md5
+cd ..
+done
+```
+
+## Renaming samples to true name
+
+* Gotta be very careful with this step as we can falsely name things. 
+	* I will use ln -s to true names
+	* This way we won't lose the true names
