@@ -1,0 +1,39 @@
+==========================================
+SLURM_JOB_ID = 8221315
+SLURM_NODELIST = c10-86
+==========================================
+Module bio3/1.0 loaded 
+292
+gzip: /home/eoziolor/guppy/data/raw/renamed/AWCSU*_292_1.fq.gz: No such file or directory
+gzip: /home/eoziolor/guppy/data/raw/renamed/AWCSU*_292_2.fq.gz: No such file or directory
+This is cutadapt 1.15 with Python 3.6.5
+Command line parameters: -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 -
+Running on 8 cores
+Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+No reads processed! Either your input file is empty or you used the wrong -f/--format parameter.
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[main] Version: 0.7.17-r1188
+[main] CMD: /home/eoziolor/program/bwa-0.7.17/bwa mem -p -R @RG\tID:292\tPL:Illumina\tPU:x\tLB:combined\tSM:292.CUN_F -t 2 /home/eoziolor/guppy/data/genome/preticulata.fna -
+[main] Real time: 1.278 sec; CPU: 1.222 sec
+
+===========================================================================
+Job Finished
+
+Name                : allocation
+User                : eoziolor
+Partition           : 
+Nodes               : c10-86
+Cores               : 8
+State               : COMPLETED
+Submit              : 2019-01-16T17:41:47
+Start               : 2019-01-16T22:07:45
+End                 : 2019-01-16T22:07:47
+Reserved walltime   : --
+Used walltime       : 00:00:02
+Used CPU time       : 00:00:02
+% User (Computation):  0.00%
+% System (I/O)      : 56.70%
+Mem reserved        : 0/node
+Max Mem used        : 4.00K (c10-86)
+Max Disk Write      : 0.00  (c10-86)
+Max Disk Read       : 0.00  (c10-86)

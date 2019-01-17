@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -J guppy_trimalign
-#SBATCH --array=1-384
+#SBATCH --array=30,31,32,39,40,41,54,55,56,137
 #SBATCH -e guppy_trimalign%A-%a.o
 #SBATCH -o guppy_trimalign%A-%a.o
 #SBATCH -N 1
@@ -46,12 +46,12 @@ my_sbl=/home/eoziolor/program/samblaster/samblaster
 my_sam=/home/eoziolor/program/samtools-1.9/samtools
 my_out=/home/eoziolor/guppy/data/align/
 my_gen=/home/eoziolor/guppy/data/genome/preticulata.fna
-my_list=/home/eoziolor/guppy/data/list/sample_pops.tsv
+my_list=/home/eoziolor/guppy/data/list/zeros_pops.txt
 
 #others
 pop=$(cat $my_list | grep $sample | cut -f 2)
 rg=$(echo \@RG\\tID:$sample\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sample.$pop)
-outroot=CSU_$sample\_$pop
+outroot=CSU\_$sample\_$pop
 
 #Code
 paste <(zcat $fq1 | paste - - - -) \
@@ -60,4 +60,4 @@ tr '\t' '\n' |\
 cutadapt -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 - |\
 $my_bwa mem $my_gen -p -R $rg -t 2 - |\
 $my_sam view -S -h -u - | \
-$my_sam sort -T $my_out/$outroot > $my_out/$outroot
+$my_sam sort -T $my_out/$outroot > $my_out/$outroot\.bam
