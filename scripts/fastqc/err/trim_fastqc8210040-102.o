@@ -1,0 +1,22 @@
+==========================================
+SLURM_JOB_ID = 8210158
+SLURM_NODELIST = c11-95
+==========================================
+Module bio3/1.0 loaded 
+FastQC v0.11.4
+102
+Started analysis of AWCSU.102.fq.gz
+Analysis complete for AWCSU.102.fq.gz
+Failed to process file AWCSU.102.fq.gz
+java.lang.ArrayIndexOutOfBoundsException: -1
+	at uk.ac.babraham.FastQC.Modules.SequenceLengthDistribution.calculateDistribution(SequenceLengthDistribution.java:100)
+	at uk.ac.babraham.FastQC.Modules.SequenceLengthDistribution.raisesError(SequenceLengthDistribution.java:184)
+	at uk.ac.babraham.FastQC.Report.HTMLReportArchive.startDocument(HTMLReportArchive.java:336)
+	at uk.ac.babraham.FastQC.Report.HTMLReportArchive.<init>(HTMLReportArchive.java:84)
+	at uk.ac.babraham.FastQC.Analysis.OfflineRunner.analysisComplete(OfflineRunner.java:155)
+	at uk.ac.babraham.FastQC.Analysis.AnalysisRunner.run(AnalysisRunner.java:110)
+	at java.lang.Thread.run(Thread.java:745)
+
+===========================================================================
+Job Finished
+

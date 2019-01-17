@@ -1,0 +1,39 @@
+==========================================
+SLURM_JOB_ID = 8218362
+SLURM_NODELIST = c8-74
+==========================================
+Module bio3/1.0 loaded 
+036
+This is cutadapt 1.15 with Python 3.6.5
+Command line parameters: -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 -
+Running on 8 cores
+Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 153802 sequences (20000066 bp)...
+[M::process] 0 single-end sequences; 153802 paired-end sequences
+[M::process] read 153232 sequences (20000172 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (25, 50144, 77, 30)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (240, 276, 993)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 2499)
+[M::mem_pestat] mean and std.dev: (553.00, 500.40)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 3252)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (156, 280, 433)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 987)
+[M::mem_pestat] mean and std.dev: (305.57, 182.97)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1264)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (117, 452, 1527)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 4347)
+[M::mem_pestat] mean and std.dev: (749.27, 800.76)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 5757)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (370, 774, 1830)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 4750)
+[M::mem_pestat] mean and std.dev: (1038.38, 929.49)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 6210)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+slurmstepd: error: *** JOB 8218362 ON c8-74 CANCELLED AT 2019-01-16T17:38:04 ***

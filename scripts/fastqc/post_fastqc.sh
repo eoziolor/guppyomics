@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH -J post_fastqc
+#SBATCH -J trim_fastqc
 #SBATCH --array=1-384
-#SBATCH -e post_fastqc%A-%a.o
-#SBATCH -o post_fastqc%A-%a.o
+#SBATCH -e trim_fastqc%A-%a.o
+#SBATCH -o trim_fastqc%A-%a.o
 #SBATCH -N 1
 #SBATCH -n 8
 #SBATCH -t 1-00:00
@@ -33,5 +33,5 @@ echo $num
 
 #code
 cd $my_dir
-fastqc -t 8 AWCSU*_$num\_*\.fq.gz \
+fastqc -t 8 AWCSU*\.$num\.fq.gz \
 -o $my_out

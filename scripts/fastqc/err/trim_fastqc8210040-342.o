@@ -1,0 +1,40 @@
+==========================================
+SLURM_JOB_ID = 8210459
+SLURM_NODELIST = c8-90
+==========================================
+Module bio3/1.0 loaded 
+FastQC v0.11.4
+342
+Started analysis of AWCSU.342.fq.gz
+Analysis complete for AWCSU.342.fq.gz
+Failed to process file AWCSU.342.fq.gz
+java.lang.ArrayIndexOutOfBoundsException: -1
+	at uk.ac.babraham.FastQC.Modules.SequenceLengthDistribution.calculateDistribution(SequenceLengthDistribution.java:100)
+	at uk.ac.babraham.FastQC.Modules.SequenceLengthDistribution.raisesError(SequenceLengthDistribution.java:184)
+	at uk.ac.babraham.FastQC.Report.HTMLReportArchive.startDocument(HTMLReportArchive.java:336)
+	at uk.ac.babraham.FastQC.Report.HTMLReportArchive.<init>(HTMLReportArchive.java:84)
+	at uk.ac.babraham.FastQC.Analysis.OfflineRunner.analysisComplete(OfflineRunner.java:155)
+	at uk.ac.babraham.FastQC.Analysis.AnalysisRunner.run(AnalysisRunner.java:110)
+	at java.lang.Thread.run(Thread.java:745)
+
+===========================================================================
+Job Finished
+
+Name                : trim_fastqc
+User                : eoziolor
+Partition           : med
+Nodes               : c8-90
+Cores               : 8
+State               : RUNNING
+Submit              : 2019-01-16T05:42:25
+Start               : 2019-01-16T05:57:38
+End                 : --
+Reserved walltime   : 1-00:00:00
+Used walltime       :   00:00:04
+Used CPU time       : --
+% User (Computation): --
+% System (I/O)      : --
+Mem reserved        : 16000M/node
+Max Mem used        : 0.00  ()
+Max Disk Write      : 0.00  ()
+Max Disk Read       : 0.00  ()

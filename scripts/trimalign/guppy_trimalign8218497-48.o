@@ -1,0 +1,31 @@
+==========================================
+SLURM_JOB_ID = 8218567
+SLURM_NODELIST = c10-86
+==========================================
+Module bio3/1.0 loaded 
+048
+This is cutadapt 1.15 with Python 3.6.5
+Command line parameters: -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 -
+Running on 8 cores
+Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 148840 sequences (20000198 bp)...
+[M::process] 0 single-end sequences; 148840 paired-end sequences
+[M::process] read 148704 sequences (20000102 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (6, 13065, 20, 7)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (242, 360, 482)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 962)
+[M::mem_pestat] mean and std.dev: (366.57, 175.97)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1202)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (412, 1111, 1820)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 4636)
+[M::mem_pestat] mean and std.dev: (1321.90, 1211.04)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 6166)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 148840 reads in 61.128 CPU sec, 31.558 real sec
+[M::process] 0 single-end sequences; 148704 paired-end sequences
+[M::process] read 147902 sequences (20000166 bp)...

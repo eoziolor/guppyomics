@@ -1,0 +1,42 @@
+==========================================
+SLURM_JOB_ID = 8218341
+SLURM_NODELIST = c11-87
+==========================================
+Module bio3/1.0 loaded 
+015
+This is cutadapt 1.15 with Python 3.6.5
+Command line parameters: -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 -
+Running on 8 cores
+Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 150862 sequences (20000274 bp)...
+[M::process] 0 single-end sequences; 150862 paired-end sequences
+[M::process] read 150460 sequences (20000115 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (18, 48842, 57, 32)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (287, 647, 1155)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 2891)
+[M::mem_pestat] mean and std.dev: (557.40, 385.76)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 3759)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (202, 303, 423)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 865)
+[M::mem_pestat] mean and std.dev: (318.97, 163.44)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1086)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (124, 429, 2051)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 5905)
+[M::mem_pestat] mean and std.dev: (1044.30, 1430.55)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 7832)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (265, 581, 2602)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 7276)
+[M::mem_pestat] mean and std.dev: (1056.65, 1040.77)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 9613)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+slurmstepd: error: *** JOB 8218341 ON c11-87 CANCELLED AT 2019-01-16T17:38:05 ***
+[M::mem_process_seqs] Processed 150862 reads in 91.008 CPU sec, 46.296 real sec
+[M::process] 0 single-end sequences; 150460 paired-end sequences
+[M::process] read 149552 sequences (20000268 bp)...
