@@ -14,7 +14,10 @@ my_dir=/home/eoziolor/guppy/data/align
 my_sam=/home/eoziolor/program/samtools-1.9/bin/samtools
 my_out=/home/eoziolor/guppy/data/align/stats.txt
 
+touch $my_out
+
 #code
-for file in $my_dir/*.bam; do
+for file in $my_dir/CSU*.bam; do
+	echo $file >> $my_out
 	$my_sam flagstat $file >> $my_out
 done

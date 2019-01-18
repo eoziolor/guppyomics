@@ -7,17 +7,16 @@
 #SBATCH -n 23
 #SBATCH -t 06-00:00
 #SBATCH --mem=60000
-#SBATCH -p high
+#SBATCH -p med
 #SBATCH --no-requeue
 
 module load bio3
 
 #files
 my_list=/home/eoziolor/guppy/data/list/bam_list.txt
-#my_stools=/home/eoziolor/program/samtools-1.9/bin/samtools
+my_stools=/home/eoziolor/program/samtools-1.9/bin/samtools
 my_out=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+my_dir=/home/eoziolor/guppy/data/align/
 
 #code
-samtools depth \
--d 10000 \
--f $my_list | gzip > $my_out
+$my_stools merge - $my_dir/CSU*.bam | $my_stools depth -d 10000 - | gzip > $my_out

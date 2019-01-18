@@ -8,7 +8,8 @@
 #SBATCH -n 16
 #SBATCH -t 01-00:00
 #SBATCH --mem=60000
-#SBATCH -p high
+#SBATCH -p med
+#SBATCH --no-requeue
 
 my_stools=/home/eoziolor/program/samtools-1.9/samtools 
 my_list=/home/eoziolor/guppy/data/list/bam_list.txt
