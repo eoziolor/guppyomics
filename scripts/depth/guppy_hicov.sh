@@ -13,8 +13,8 @@ module load bio3
 source ~/.bashrc
 
 #files
-my_cov=/home/eoziolor/phpopg/data/depth/coverage_allbases.txt.gz
-my_out=/home/eoziolor/phpopg/data/depth/hicov.bed
+my_cov=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+my_out=/home/eoziolor/guppy/data/depth/hicov.bed
 
 zcat $my_cov | \
 awk '{OFS="\t"}{s=$2-1}{print $1,s,$2,$3}' | \
