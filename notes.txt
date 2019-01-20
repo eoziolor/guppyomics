@@ -587,3 +587,981 @@ $my_bwa mem $my_gen -p -R $rg -t 2 - |\
 $my_sam view -S -h -u - | \
 $my_sam sort -T $my_out/$outroot > $my_out/$outroot\.bam
 ```
+Jan 17, 2019
+===
+
+* Several individuals fell on crappy nodes
+	* 30,31,32,39,40,41,54,55,56,137
+* Rerunning
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J guppy_trimalign
+#SBATCH --array=30,31,32,39,40,41,54,55,56,137
+#SBATCH -e guppy_trimalign%A-%a.o
+#SBATCH -o guppy_trimalign%A-%a.o
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 01-00:00
+#SBATCH --mem=16000
+
+module load bio3
+
+#Assigning number to be able to get into each folder separately
+
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+	num=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+	num=0$(echo $SLURM_ARRAY_TASK_ID)
+else
+	num=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+echo $num
+
+#Assigning new sample numbers with same amount of digits
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+        sample=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+        sample=0$(echo $SLURM_ARRAY_TASK_ID)
+else 
+        sample=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+
+#Directory and file assignment for each file and program
+my_dir=/home/eoziolor/guppy/data/raw/renamed
+fq1=$my_dir/AWCSU*\_$num\_1.fq.gz
+fq2=$my_dir/AWCSU*\_$num\_2.fq.gz
+my_bwa=/home/eoziolor/program/bwa-0.7.17/bwa
+my_sbl=/home/eoziolor/program/samblaster/samblaster
+my_sam=/home/eoziolor/program/samtools-1.9/samtools
+my_out=/home/eoziolor/guppy/data/align/
+my_gen=/home/eoziolor/guppy/data/genome/preticulata.fna
+my_list=/home/eoziolor/guppy/data/list/zeros_pops.txt
+
+#others
+pop=$(cat $my_list | grep $sample | cut -f 2)
+rg=$(echo \@RG\\tID:$sample\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sample.$pop)
+outroot=CSU\_$sample\_$pop
+
+#Code
+paste <(zcat $fq1 | paste - - - -) \
+      <(zcat $fq2 | paste - - - -) |\
+tr '\t' '\n' |\
+cutadapt -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 - |\
+$my_bwa mem $my_gen -p -R $rg -t 2 - |\
+$my_sam view -S -h -u - | \
+$my_sam sort -T $my_out/$outroot > $my_out/$outroot\.bam
+```
+
+* Empty samples were produced because of array parameters. Removing those manually.
+
+```{bash}
+cd ~/guppy/data/align/
+rm *_.bam
+```
+
+* Re-run 137. This is frustrating.
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J guppy_trimalign
+#SBATCH --array=137
+#SBATCH -e guppy_trimalign%A-%a.o
+#SBATCH -o guppy_trimalign%A-%a.o
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 01-00:00
+#SBATCH --mem=16000
+
+module load bio3
+
+#Assigning number to be able to get into each folder separately
+
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+	num=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+	num=0$(echo $SLURM_ARRAY_TASK_ID)
+else
+	num=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+echo $num
+
+#Assigning new sample numbers with same amount of digits
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+        sample=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+        sample=0$(echo $SLURM_ARRAY_TASK_ID)
+else 
+        sample=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+
+#Directory and file assignment for each file and program
+my_dir=/home/eoziolor/guppy/data/raw/renamed
+fq1=$my_dir/AWCSU*\_$num\_1.fq.gz
+fq2=$my_dir/AWCSU*\_$num\_2.fq.gz
+my_bwa=/home/eoziolor/program/bwa-0.7.17/bwa
+my_sbl=/home/eoziolor/program/samblaster/samblaster
+my_sam=/home/eoziolor/program/samtools-1.9/samtools
+my_out=/home/eoziolor/guppy/data/align/
+my_gen=/home/eoziolor/guppy/data/genome/preticulata.fna
+my_list=/home/eoziolor/guppy/data/list/zeros_pops.txt
+
+#others
+pop=$(cat $my_list | grep $sample | cut -f 2)
+rg=$(echo \@RG\\tID:$sample\\tPL:Illumina\\tPU:x\\tLB:combined\\tSM:$sample.$pop)
+outroot=CSU\_$sample\_$pop
+
+#Code
+paste <(zcat $fq1 | paste - - - -) \
+      <(zcat $fq2 | paste - - - -) |\
+tr '\t' '\n' |\
+cutadapt -j 8 --interleaved -a CTGTCTCTTATA -A CTGTCTCTTATA -u 10 -U 10 -q 30 --trim-n --minimum-length 36 - |\
+$my_bwa mem $my_gen -p -R $rg -t 2 - |\
+$my_sam view -S -h -u - | \
+$my_sam sort -T $my_out/$outroot > $my_out/$outroot\.bam
+```
+
+* Fantastic, everything has run properly
+* One issue - created bam files for failed samples! - Let's remove those
+
+```{bash}
+ls -lS *CSU* | tail -n 27 | awk '{print $9}' > fake_bams.txt
+
+cat fake_bams.txt | xargs rm
+```
+
+## Basic statistics
+
+* Using samtools flagstat to look at alignment success
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J flagstat
+#SBATCH -e flagstat-%j.o
+#SBATCH -o flagstat-%j.o
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH -t 01-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+#files
+my_dir=/home/eoziolor/guppy/data/align
+my_sam=/home/eoziolor/program/samtools-1.9/bin/samtools
+my_out=/home/eoziolor/guppy/data/align/stats.txt
+
+touch $my_out
+
+#code
+for file in $my_dir/CSU*.bam; do
+	echo $file >> $my_out
+	$my_sam flagstat $file >> $my_out
+done
+```
+
+## File with all bam locations
+
+```{bash}
+cd ~/guppy/data/align/
+ls -1 CSU* | sed 's/^/\/home\/eoziolor\/guppy\/data\/align\//g' > ~/guppy/data/list/bam_list.txt
+```
+
+## Merging all files into one bam
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J mergebam
+#SBATCH -e mergebam-%j.o
+#SBATCH -o mergebam-%j.o
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH -t 02-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+#files
+my_bam=/home/eoziolor/program/bamtools/build/src/toolkit/bamtools
+my_merge=/home/eoziolor/guppy/data/align/allmerge.bam
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+
+#code
+$my_bam merge -list $my_list -out $my_merge
+```
+
+## Per base coverage
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bamdepth
+#SBATCH -e bamdepth-%j.o
+#SBATCH -o bamdepth-%j.o
+#SBATCH -N 1
+#SBATCH -n 23
+#SBATCH -t 06-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+#SBATCH --no-requeue
+
+module load bio3
+
+#files
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+#my_stools=/home/eoziolor/program/samtools-1.9/bin/samtools
+my_out=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+
+#code
+samtools depth \
+-d 10000 \
+-f $my_list | gzip > $my_out
+```
+
+* Since this is on all bams, we need to sum up all columns
+
+```{bash}
+zcat coverage_allbases.txt.gz | cut -f 3- | awk '{for(i=1;i<=NF;i++) t+=$i; print t; t=0}'
+```
+
+## Indexing individual bam files
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bam_index
+#SBATCH --array=1-383
+#SBATCH -e bam_index-%A-%a.o
+#SBATCH -o bam_index-%A-%a.o
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH -t 01-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+my_stools=/home/eoziolor/program/samtools-1.9/samtools 
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+	num=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+	num=0$(echo $SLURM_ARRAY_TASK_ID)
+else
+	num=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+my_sample=$(cat $my_list | grep $num)
+
+echo $num
+echo $my_sample
+
+$my_stools index -@ 16 $my_sample
+```
+
+* Indexing to be repeated for samples 4,88,178,222,289,294,364,374
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bam_index
+#SBATCH --array=4,88,178,222,289,294,364,374
+#SBATCH -e bam_index-%A-%a.o
+#SBATCH -o bam_index-%A-%a.o
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH -t 01-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+my_stools=/home/eoziolor/program/samtools-1.9/samtools 
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+
+if (($SLURM_ARRAY_TASK_ID < 10))
+then
+	num=00$(echo $SLURM_ARRAY_TASK_ID)
+elif (($SLURM_ARRAY_TASK_ID < 100))
+then
+	num=0$(echo $SLURM_ARRAY_TASK_ID)
+else
+	num=$(echo $SLURM_ARRAY_TASK_ID)
+fi
+
+my_sample=$(cat $my_list | grep $num)
+
+echo $num
+echo $my_sample
+
+$my_stools index -@ 16 $my_sample
+```
+
+## Mapping success rate and coverage
+
+```{bash}
+#in folder with bam files
+cat stats.txt | grep "mapped (" | awk '{OFS=" "}{print $1}' > mapped_reads.txt
+ls -1 CSU*.bam | head -n -4 | tr '_' '\t' | sed 's/.bam//g' | paste - mapped_reads.txt > mapped_reads_ind.txt
+```
+
+## ANGSD
+
+### Lists of population samples
+
+* For angsd to run on populations, we need to create list of each population.
+
+```{bash}
+cd /home/eoziolor/guppy/data/list
+mkdir pops
+cat pops.txt | sort |  uniq > uniq.popx.txt
+
+for pop in $(cat uniq.pops.txt)
+do
+cat bam_list.txt | grep $pop > pops/$pop.txt
+done
+
+for i in $(ls C*); do echo $i; cat $i | wc -l; done > sample_sizes.txt
+```
+
+## Genome file
+
+```{bash}
+awk -v OFS='\t' {'print $1,$2'} preticulata.fna.fai > preticulata.fna.genome
+```
+
+## Breaking up large autosomes
+
+* Selecting the large autosomes from the .genome file
+
+```{bash}
+cat preticulata.fna.genome | grep NC_ | head -n -1
+```
+* There are 23 of them and 2744 NW + 1 small NC
+
+### Working on NC - large autosomes (n=23)
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bigbayes
+#SBATCH --array=1-920
+#SBATCH -e bigbayes%A-%a.o
+#SBATCH -o bigbayes%A-%a.o
+#SBATCH -t 06-00:00
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -p med
+#SBATCH --no-requeue
+
+cd /home/eoziolor/guppy/data/varcall/scaffold/
+
+#files
+genome=/home/eoziolor/guppy/data/genome/preticulata.fna
+my_fai=/home/eoziolor/guppy/data/genome/preticulata.fna.fai
+mergebam=/home/eoziolor/guppy/data/align/allmerge.bam
+popsfile=/home/eoziolor/guppy/data/list/zeros_pops.tsv
+hicov=/home/eoziolor/guppy/data/depth/hicov.bed
+reg_file=/home/eoziolor/guppy/data/genome/preticulata.fna.genome
+
+#programs
+my_freebayes=/home/eoziolor/program/freebayes/bin/freebayes
+my_samtools=/home/eoziolor/program/samtools-1.9/samtools
+my_bgz=/home/eoziolor/program/htslib/bgzip
+my_bedtools=/home/eoziolor/program/bedtools2/bin/bedtools
+
+#selecting scaffold to investigate from the genome file
+
+crap=$(echo $SLURM_ARRAY_TASK_ID)
+line=$(echo $(((crap+39)/40)))
+scaf=$(sed "$line q;d" $reg_file | cut -f1)
+end=$(sed "$line q;d" $reg_file | cut -f2)
+
+#chunking a region to investigate
+
+short=$((end/40))
+iter=$((crap-((line-1)*40)))
+chunk=$((short*iter))
+if [ "$iter" -lt "40" ]; then
+	portion=$((1+chunk-short))-$chunk
+else
+	portion=$((1+chunk-short))-$end
+fi
+region=$scaf:$portion
+
+echo "This is array number" $crap 
+echo "I am picking line" $line "from genome file"
+echo "It is iteration" $iter "for scaffold" $scaf
+echo "The chunk size I am picking is" $short "bases long and this is ending at" $chunk
+echo "The region this defines is" $portion "from scaffold with length" $end
+echo "\n\n"
+
+
+#directories and files
+
+outdir=/home/eoziolor/guppy/data/varcall/scaffold
+outfile=$scaf\_$iter\.vcf.bgz
+
+$my_samtools view -q 30 -f 2 -h -b  $mergebam $region | \
+$my_bedtools intersect -v -a stdin -b $hicov | \
+$my_freebayes -f $genome --populations $popsfile --stdin | \
+$my_bgz > $outdir/$outfile
+
+echo "The file created is" $outfile
+echo "I place it in directory" $outdir
+```
+
+# Jan 18, 2019
+
+### Mapping success rate and coverage
+
+```{bash}
+#in folder with bam files
+cat stats.txt | grep "mapped (" | awk '{OFS=" "}{print $1}' > mapped_reads.txt
+cat stats.txt | grep home | sed 's/\/home\/eoziolor\/guppy\/data\/align\///g' | sed 's/\.bam//g' | tr '_' '\t' | awk '{print $2,$3,$4}' | paste - mapped_reads.txt > mapped_reads_ind.txt
+```
+
+### Exploring mapped reads in R
+
+```{r}
+library(ggplot2)
+mapped<-read.table("~/guppy/data/mapped_reads_ind.txt",header=F,sep='\t')
+mapped<-na.omit(mapped)
+
+#calculating coverage
+mapped[,5]<-mapped[,4]*140/830000000
+
+#histogram for overall coverage
+hist(mapped[,5],breaks=100, col="black")
+
+#converting ind to numeric
+mapped[,1]<-as.numeric(mapped[,1])
+
+#creating a vector of plate #
+for(i in 1:20){
+  for(j in 1:(dim(mapped)[1])){
+    if(mapped[j,1]<=i*64&&mapped[j,1]>(i-1)*64){
+    mapped[j,6]<-i
+  }
+  }
+}
+
+#naming columns
+colnames(mapped)<-c("ind","pop","sal","reads","cov","plate")
+
+ggplot(mapped,
+       aes(x=pop,y=cov,color=pop))+
+  geom_violin(color="black")+
+  geom_jitter()+
+  theme_classic()
+
+ggplot(mapped,
+       aes(x=as.factor(plate),y=cov,color=plate))+
+  geom_violin(color="black")+
+  geom_jitter()+
+  theme_classic()
+
+ggplot(mapped,
+       aes(x=as.factor(sal),y=cov,color=sal))+
+  geom_violin(color="black")+
+  geom_jitter()+
+  theme_classic()
+
+```
+
+## Depth per base on merged bam
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bamdepth
+#SBATCH -e bamdepth-%j.o
+#SBATCH -o bamdepth-%j.o
+#SBATCH -N 1
+#SBATCH -n 23
+#SBATCH -t 06-00:00
+#SBATCH --mem=60000
+#SBATCH -p med
+#SBATCH --no-requeue
+
+module load bio3
+
+#files
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+my_stools=/home/eoziolor/program/samtools-1.9/bin/samtools
+my_out=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+my_dir=/home/eoziolor/guppy/data/align/
+
+#code
+$my_stools merge - $my_dir/CSU*.bam | $my_stools depth -d 10000 - | gzip > $my_out
+```
+
+* Grabbing 10Mb at random
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J rand10Mb
+#SBATCH -e rand10Mb-%j.o
+#SBATCH -o rand10Mb-%j.o
+#SBATCH -N 1
+#SBATCH -n 23
+#SBATCH -t 01-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+module load bio3
+
+#files
+dir=/home/eoziolor/guppy/data/depth
+
+zcat $dir/coverage_allbases.txt.gz | \
+sort -R | \
+head -n 10000000 | \
+gzip > $dir/cov_10Mbrand.txt.gz
+```
+
+## Windows file
+* Starting with 50kb windows, 10kb slide
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J windows
+#SBATCH -e bamdepth-%j.o
+#SBATCH -o bamdepth-%j.o
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 06-00:00
+#SBATCH --mem=16000
+#SBATCH -p high
+#SBATCH --no-requeue
+
+my_btools=/home/eoziolor/program/bedtools2/bin/bedtools
+my_ref=/home/eoziolor/guppy/data/genome/preticulata.fna.genome
+my_out=/home/eoziolor/guppy/data/window/50kb.10kb.bed
+
+$my_btools makewindows \
+-g $my_ref \
+-w 50000 \
+-s 10000 > $my_out
+```
+
+## Indexing merged_stools.bam file
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bam_index
+#SBATCH -e bam_index-%j.o
+#SBATCH -o bam_index%j.o
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH -t 01-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+my_stools=/home/eoziolor/program/samtools-1.9/samtools 
+my_bam=/home/eoziolor/guppy/data/align/allmerge_stools.bam
+
+$my_stools index -@16 $my_bam
+```
+
+## Coverage of completed bam instead of simultaneous
+
+* in addition to coverage from merge + depth, I'll run depth on the finished samtools merged bam
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bamdepth
+#SBATCH -e bamdepth-%j.o
+#SBATCH -o bamdepth-%j.o
+#SBATCH -N 1
+#SBATCH -n 23
+#SBATCH -t 06-00:00
+#SBATCH --mem=60000
+#SBATCH -p med
+#SBATCH --no-requeue
+
+module load bio3
+
+#files
+my_list=/home/eoziolor/guppy/data/list/bam_list.txt
+my_stools=/home/eoziolor/program/samtools-1.9/bin/samtools
+my_out=/home/eoziolor/guppy/data/depth/coverage_allbases2.txt.gz
+my_in=/home/eoziolor/guppy/data/align/allmerge_stools.bam
+
+#code
+$my_stools depth -d 10000 $my_in | gzip > $my_out
+```
+
+## Determining high coverage threshold
+
+```{bash}
+scp -P 2022 farm:/home/eoziolor/guppy/data/depth/cov_10Mbrand.txt.gz ~/guppy/data/
+```
+
+### Observing coverage in R
+
+```{r}
+cov<-read.table("~/guppy/data/cov_10Mbrand.txt.gz",header=F)
+names(cov)<-c("chrom","pos","cov")
+cov$cov<-as.numeric(cov$cov)
+hist(cov$cov,breaks=1000)
+
+subw<-cov$cov<3000
+hist(cov[subw,"cov"],breaks=1000)
+
+summary(cov$cov)
+summary(cov[subw,"cov"])
+```
+
+## High coverage regions
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J highcov
+#SBATCH -e highcov-%j.o
+#SBATCH -o highcov-%j.o
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 03-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+module load bio3
+source ~/.bashrc
+
+#files
+my_cov=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+my_out=/home/eoziolor/guppy/data/depth/hicov.bed
+
+zcat $my_cov | \
+awk '{OFS="\t"}{s=$2-1}{print $1,s,$2,$3}' | \
+awk '{OFS="\t"}{if($4>1500){print}}' | \
+bedtools merge -i - -d 10 -c 4 -o count > $my_out
+```
+
+Jan 20, 2019
+===
+
+* High coverage file has been prepared. We are ready to call variants.
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J bigbayes
+#SBATCH --array=1-2300
+#SBATCH -e bigbayes%A-%a.o
+#SBATCH -o bigbayes%A-%a.o
+#SBATCH -t 06-00:00
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -p med
+#SBATCH --no-requeue
+
+cd /home/eoziolor/guppy/data/varcall/scaffold/
+
+#files
+genome=/home/eoziolor/guppy/data/genome/preticulata.fna
+my_fai=/home/eoziolor/guppy/data/genome/preticulata.fna.fai
+mergebam=/home/eoziolor/guppy/data/align/allmerge_stools.bam
+popsfile=/home/eoziolor/guppy/data/list/zeros_pops.txt
+hicov=/home/eoziolor/guppy/data/depth/hicov.bed
+reg_file=/home/eoziolor/guppy/data/genome/preticulata.fna.genome
+
+#programs
+my_freebayes=/home/eoziolor/program/freebayes/bin/freebayes
+my_samtools=/home/eoziolor/program/samtools-1.9/samtools
+my_bgz=/home/eoziolor/program/htslib/bgzip
+my_bedtools=/home/eoziolor/program/bedtools2/bin/bedtools
+
+#selecting scaffold to investigate from the genome file
+
+crap=$(echo $SLURM_ARRAY_TASK_ID)
+line=$(echo $(((crap+99)/100)))
+scaf=$(sed "$line q;d" $reg_file | cut -f1)
+end=$(sed "$line q;d" $reg_file | cut -f2)
+
+#chunking a region to investigate
+
+short=$((end/100))
+iter=$((crap-((line-1)*100)))
+chunk=$((short*iter))
+if [ "$iter" -lt "100" ]; then
+	portion=$((1+chunk-short))-$chunk
+else
+	portion=$((1+chunk-short))-$end
+fi
+region=$scaf:$portion
+
+echo "This is array number" $crap 
+echo "I am picking line" $line "from genome file"
+echo "It is iteration" $iter "for scaffold" $scaf
+echo "The chunk size I am picking is" $short "bases long and this is ending at" $chunk
+echo "The region this defines is" $portion "from scaffold with length" $end
+echo "\n\n"
+
+
+#directories and files
+
+outdir=/home/eoziolor/guppy/data/varcall/scaffold
+outfile=$scaf\_$iter\.vcf.bgz
+
+$my_samtools view -q 30 -f 2 -h -b  $mergebam $region | \
+$my_bedtools intersect -v -a stdin -b $hicov | \
+$my_freebayes -f $genome --populations $popsfile --stdin | \
+$my_bgz > $outdir/$outfile
+
+echo "The file created is" $outfile
+echo "I place it in directory" $outdir
+```
+
+# ANGSD
+
+## High coverage applying filter
+* applying filter for high coverage sites to genome file in order to only keep normal coverage ones
+
+```{bash Creating a high coverage file excluding those SNPs}
+#Downloading data to look at how much of the genome I threw out
+mkdir ~/guppy/data/angsd
+scp -P 2022 farm:/home/eoziolor/guppy/data/depth/hicov.bed ~/guppy/data/angsd/
+```
+
+## Looking at size of excluded high coverage regions
+```{r}
+hi<-read.table("~/guppy/data/angsd/hicov.bed",header=FALSE)
+sum(hi[,4])
+
+#Threw out 14Mb of data => 1.6% of the genome
+```
+
+## Creating a keepsites file 
+* with all bases that have below 200x coverage
+
+```{bash Create the keepsites file and export to computer}
+#[cluster]
+#!/bin/bash -l
+
+#SBATCH -J keepsites
+#SBATCH -e keepsites-%j.o
+#SBATCH -o keepsites-%j.o
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 03-00:00
+#SBATCH --mem=60000
+#SBATCH -p high
+
+module load bio3
+source ~/.bashrc
+
+my_cov=/home/eoziolor/guppy/data/depth/coverage_allbases.txt.gz
+my_out=/home/eoziolor/guppy/data/angsd/keepsites.bed
+
+zcat $my_cov | \
+awk '{OFS="\t"}{s=$2-1}{print $1,s,$2,$3}' | \
+awk '{OFS="\t"}{if($4<1500){print}}' | \
+bedtools merge -i - -d 10 > $my_out
+```
+
+## VCF canceling part of the jobs to get to ANGSD
+
+```{bash}
+scancel 8241749_[145-2300]
+```
+
+* Converting those to a .file format for ANGSD to deal with
+```{bash}
+cat /home/eoziolor/guppy/data/angsd/keepsites.bed | \
+awk '{OFS="\t"}{s=$2+1}{print $1,s,$3}' > /home/eoziolor/guppy/data/angsd/keepsites.file
+```
+
+* Downloading the .bed file to make a script with 50Mb randomly selected to create expectation for SFS
+```{bash}
+scp -P 2022 farm:/home/eoziolor/guppy/data/angsd/keepsites.bed ~/guppy/data/angsd/
+```
+
+* Script to pick up 50Mb at random from the keepsites file in order to run SAF and SFS on those for bayesian priors
+
+```{r Selecting random 50Mb from it}
+
+orig<-read.table("~/guppy/data/angsd/keepsites.bed", header=F) #reading in the keepsites file
+
+p<-(orig[,3]-orig[,2])/(sum(orig[,3]-orig[,2])) #creating probability vector so that I don't oversample large chunks
+
+p<-unlist(p) #unlisting the vector
+
+z<-p<0 #removing any negative probabilities for 0 values
+p<-p[!z] #applying that to vector
+
+v<-sample(x=length(p),size=2650,prob=p) #sampling 2650 chunks with probability to get out ~50Mb of the genome
+v<-sort(v)
+sum(orig[v,3]-orig[v,2]) #checking the total size of bases
+
+write.table(orig[v,], file="~/guppy/data/angsd/keep50Mb.bed",row.names=FALSE,col.names=FALSE,quote=FALSE,sep='\t')
+```
+
+* putting that data back into [cluster]
+
+```{bash Copy those selections from computer}
+scp -P 2022 ~/guppy/data/angsd/keep50Mb.bed farm:/home/eoziolor/guppy/data/angsd/
+```
+
+* Converting that to a .file
+
+```{bash Convert from bed to file}
+cat /home/eoziolor/guppy/data/angsd/keep50Mb.bed | \
+awk '{OFS="\t"}{s=$2+1}{print $1,s,$3}' > /home/eoziolor/guppy/data/angsd/keep50Mb.file
+
+cat /home/eoziolor/guppy/data/angsd/keepsites.bed | \
+awk '{OFS="\t"}{s=$2+1}{print $1,s,$3}' > /home/eoziolor/guppy/data/angsd/keepsites.file
+```
+
+* indexing all of those files with ANGSD
+
+```{bash Index keepsites}
+/home/eoziolor/program/angsd/angsd sites index /home/eoziolor/guppy/data/angsd/keepsites.file
+/home/eoziolor/program/angsd/angsd sites index /home/eoziolor/guppy/data/angsd/keep50Mb.file
+```
+
+## SAF (Site Allele Frequency) estimate
+* Starting site allele frequency estimation on a 50Mb subsample for each population (to create SFS)
+
+```{bash Running Site Allele Frequency estimations on the 50Mb chunk}
+#!/bin/bash -l
+
+#SBATCH -J saf_50mb
+#SBATCH --array=1-11
+#SBATCH -e saf_50mb%A-%a.o
+#SBATCH -o saf_50mb%A-%a.o
+#SBATCH -t 06-00:00
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -p med
+#SBATCH --no-requeue
+
+pops=CAP_F\ CAP_H\ CAP_L\ CAP_S\ CAR_F\ CAR_H\ CAR_L\ CAR_S\ CUN_F\ CUN_L\ CUN_S
+
+one=$(echo $pops | cut -f $SLURM_ARRAY_TASK_ID -d ' ')
+
+#files
+list=/home/eoziolor/guppy/data/list/pops/$one\.txt
+genome=/home/eoziolor/guppy/data/genome/preticulata.fna
+keep=/home/eoziolor/guppy/data/angsd/keep50Mb.file
+outfile=/home/eoziolor/guppy/data/angsd/$one\_small
+my_angsd=/home/eoziolor/program/angsd/angsd
+
+$my_angsd \
+-bam $list \
+-doSaf 1 \
+-fold 1 \
+-anc $genome \
+-GL 2 \
+-minMapQ 30 \
+-minQ 20 \
+-minind 10 \
+-sites $keep \
+-out $outfile
+```
+
+## Varcall
+
+* Re-submitted iterations 145-200 while SAF_50MB is running
+
+* Also re-submitted jobs 201-2300 without --no-requeue so that I can run SFS on high priority later!
+
+## SFS
+
+* CAP_F,H,S completed SAF. Starting SFS.
+
+* Running array for those
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J sfs
+#SBATCH --array=1,2,4
+#SBATCH -e sfs%A-%a.o
+#SBATCH -o sfs%A-%a.o
+#SBATCH -t 06-00:00
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -p med
+#SBATCH --no-requeue
+
+pops=CAP_F\ CAP_H\ CAP_L\ CAP_S\ CAR_F\ CAR_H\ CAR_L\ CAR_S\ CUN_F\ CUN_L\ CUN_S
+
+one=$(echo $pops | cut -f $SLURM_ARRAY_TASK_ID -d ' ')
+
+
+#program and file
+my_sfs=/home/eoziolor/program/angsd/misc/realSFS
+in_saf=/home/eoziolor/guppy/data/angsd/$one\_small.saf.idx
+outdir=/home/eoziolor/guppy/data/angsd
+out_sfs=$one\.sfs
+
+#code
+
+$my_sfs $in_saf -maxIter 100 -P 8 -nSites 50000000 > $outdir/$out_sfs
+```
+
+# Thetas
+
+* Running on samples 1,2,4,5,9,11 since their saf and sfs finished.
+
+```{bash}
+#!/bin/bash -l
+
+#SBATCH -J thetas
+#SBATCH --array=1,2,4,5,9,11
+#SBATCH -e thetas%A-%a.o
+#SBATCH -o thetas%A-%a.o
+#SBATCH -t 06-00:00
+#SBATCH -n 8
+#SBATCH --mem=16G
+#SBATCH -p high
+#SBATCH --no-requeue
+
+pops=CAP_F\ CAP_H\ CAP_L\ CAP_S\ CAR_F\ CAR_H\ CAR_L\ CAR_S\ CUN_F\ CUN_L\ CUN_S
+
+one=$(echo $pops | cut -f $SLURM_ARRAY_TASK_ID -d ' ')
+
+#files
+list=/home/eoziolor/guppy/data/list/pops/$one\.txt
+genome=/home/eoziolor/guppy/data/genome/preticulata.fna
+keep=/home/eoziolor/guppy/data/angsd/keepsites.file
+outfile=/home/eoziolor/guppy/data/angsd/$one\_theta
+my_angsd=/home/eoziolor/program/angsd/angsd
+my_sfs=/home/eoziolor/guppy/data/angsd/$one\.sfs
+
+#Code
+$my_angsd \
+-bam $list \
+-out $outfile \
+-doThetas 1 \
+-fold 1 \
+-doSaf 1 \
+-pest  $my_sfs \
+-anc $genome \
+-sites $keep \
+-minMapQ 30 \
+-minQ 20 \
+-minind 10 \
+-GL 2
+```
+
