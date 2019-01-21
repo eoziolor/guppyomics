@@ -1,13 +1,13 @@
 #!/bin/bash -l
 
 #SBATCH -J saf_50mb
-#SBATCH --array=1-11
+#SBATCH --array=6
 #SBATCH -e saf_50mb%A-%a.o
 #SBATCH -o saf_50mb%A-%a.o
 #SBATCH -t 06-00:00
 #SBATCH -n 8
 #SBATCH --mem=16G
-#SBATCH -p med
+#SBATCH -p high
 #SBATCH --no-requeue
 
 pops=CAP_F\ CAP_H\ CAP_L\ CAP_S\ CAR_F\ CAR_H\ CAR_L\ CAR_S\ CUN_F\ CUN_L\ CUN_S
@@ -31,4 +31,5 @@ $my_angsd \
 -minQ 20 \
 -minind 10 \
 -sites $keep \
--out $outfile
+-out $outfile \
+-nThreads 8

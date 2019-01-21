@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -J sfs
-#SBATCH --array=9,11
+#SBATCH --array=6
 #SBATCH -e sfs%A-%a.o
 #SBATCH -o sfs%A-%a.o
 #SBATCH -t 06-00:00

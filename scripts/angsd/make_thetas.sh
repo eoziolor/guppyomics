@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -J thetas
-#SBATCH --array=1,2,4,5,9,11
+#SBATCH --array=6
 #SBATCH -e thetas%A-%a.o
 #SBATCH -o thetas%A-%a.o
 #SBATCH -t 06-00:00

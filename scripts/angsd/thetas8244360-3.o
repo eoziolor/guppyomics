@@ -1,0 +1,46 @@
+==========================================
+SLURM_JOB_ID = 8244361
+SLURM_NODELIST = c10-69
+==========================================
+	-> Problem with difference in zlib version used for compiling and linking
+	-> ZLIB_VERSION: 1.2.8 zlibversion: 1.2.11 
+	-> angsd version: 0.919-40-g642076d (htslib: 1.5-23-g1cc6afd) build(Sep 11 2017 10:16:18)
+	-> [prep_sites.cpp] Reading binary representation of '/home/eoziolor/guppy/data/angsd/keepsites.file'
+	-> [prep_sites.cpp] nChr: 2764 loaded from binary filter file
+	-> [abcFilter.cpp] -sites is still beta, use at own risk...
+	-> Reading fasta: /home/eoziolor/guppy/data/genome/preticulata.fna
+	-> Parsing 51 number of samples 
+	-> Printing at chr: NC_024331.1 pos:372861 chunknumber 100 contains 2236 sites
+	-> Printing at chr: NC_024331.1 pos:649196 chunknumber 200 contains 2078 sites
+	-> Printing at chr: NC_024331.1 pos:860226 chunknumber 300 contains 1550 sites
+	-> Printing at chr: NC_024331.1 pos:1075407 chunknumber 400 contains 2815 sites
+	-> Printing at chr: NC_024331.1 pos:1280767 chunknumber 500 contains 1480 sites
+	-> Printing at chr: NC_024331.1 pos:1487307 chunknumber 600 contains 2634 sites
+
+	-> Allocated ~ 10 million nodes to the nodepool, this is not an estimate of the memory usage
+	-> Printing at chr: NC_024331.1 pos:1663686 chunknumber 700 contains 1583 sites
+	-> Printing at chr: NC_024331.1 pos:1852212 chunknumber 800 contains 1092 sites
+PROBS at: NC_024331.1	1920552
+/var/spool/slurmd/job8244361/slurm_script: line 38: 12386 Segmentation fault      $my_angsd -bam $list -out $outfile -doThetas 1 -fold 1 -doSaf 1 -pest $my_sfs -anc $genome -sites $keep -minMapQ 30 -minQ 20 -minind 10 -GL 2
+
+===========================================================================
+Job Finished
+
+Name                : thetas
+User                : eoziolor
+Partition           : high
+Nodes               : c10-69
+Cores               : 8
+State               : FAILED
+Submit              : 2019-01-20T08:34:39
+Start               : 2019-01-20T08:34:52
+End                 : 2019-01-20T08:36:15
+Reserved walltime   : 6-00:00:00
+Used walltime       :   00:01:23
+Used CPU time       :   01:37:03
+% User (Computation): 96.07%
+% System (I/O)      :  3.93%
+Mem reserved        : 16G/node
+Max Mem used        : 247.36M (,c10-69)
+Max Disk Write      : 0.00  (,c10-69)
+Max Disk Read       : 1.30M (,c10-69)
