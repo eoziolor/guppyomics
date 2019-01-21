@@ -1,13 +1,14 @@
 #!/bin/bash -l
 
 #SBATCH -J bigbayes
-#SBATCH --array=201-2300
+#SBATCH --array=1482,1462,1365,1348,1322,1305,1285,1171
 #SBATCH -e bigbayes%A-%a.o
 #SBATCH -o bigbayes%A-%a.o
 #SBATCH -t 06-00:00
 #SBATCH -n 8
 #SBATCH --mem=16G
 #SBATCH -p med
+#SBATCH --no-requeue
 
 
 cd /home/eoziolor/guppy/data/varcall/scaffold/

@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -J convert_thetas
-#SBATCH --array=7,8
+#SBATCH --array=9
 #SBATCH -e convert_thetas%A-%a.o
 #SBATCH -o convert_thetas%A-%a.o
 #SBATCH -t 06-00:00
