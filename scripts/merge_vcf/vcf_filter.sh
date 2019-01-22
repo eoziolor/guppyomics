@@ -19,6 +19,7 @@ cd $my_dir
 
 $my_vtools \
 --gzvcf $my_prevcf \
+--recode \
 --stdout \
 --maf 0.01 \
 --min-alleles 2 \

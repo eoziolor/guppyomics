@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH -J window_thetas
-#SBATCH --array=9
+#SBATCH --array=3
 #SBATCH -e window_thetas%A-%a.o
 #SBATCH -o window_thetas%A-%a.o
 #SBATCH -t 06-00:00
